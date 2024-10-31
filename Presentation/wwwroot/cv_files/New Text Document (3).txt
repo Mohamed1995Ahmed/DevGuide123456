@@ -1,0 +1,166 @@
+custom attribute like a class
+derived directly or not directly from System attribute
+and have methods that can store and retrieve data
+------------------
+to design custom attribute must execute
+1-AttributeUsage
+a-Attribute Targets Member  
+all methods classes
+example [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method |attribuetarget.all)]
+b-Inherited Property
+if inherited is true then any method in parent can children override it
+else not can see it
+c-AllowMultiple Property
+The AttributeUsageAttribute.AllowMultiple property indicates whether multiple instances of your attribute can exist on an element. If set to true, multiple instances are allowed.
+ If set to false (the default), only one instance is allowed.
+  (public MyAttribute(bool myvalue)
+{
+    this.myvalue = myvalue;
+} target all inhert true multiple false)
+
+----------------------------
+2-Declaring the Attribute Class
+After you apply the AttributeUsageAttribute, start defining the specifics of your attribute. The declaration of an attribute class looks similar to the declaration of a traditional class, as demonstrated by the following code:
+3- declare Constructors
+notes
+1-Attributes add metadata to your program
+to run custom attribute must use reflection
+Key Reflection Classes and Methods:
+Type: Represents type information. You use it to get metadata about a class, method, property, etc.
+
+PropertyInfo: Represents a property of a class. You use it to get or set property values.
+
+MethodInfo: Represents a method of a class. You use it to invoke methods dynamically.
+
+Activator: Provides methods to create instances of types.
+
+FieldInfo: Represents a field in a class. You use it to get or set field values.
+
+Assembly: Represents an assembly and allows you to inspect the types and members it contains.
+
+Reflection can be very powerful but use it cautiously, as it can lead to performance overhead and reduced type safety.
+2. Apply the Custom Attribute
+Apply the custom attribute to a class or method (or other valid targets) by placing it above the definition with square brackets.
+[MyCustomAttribute("This is a sample class", 1)]
+public class SampleClass
+{
+    [MyCustomAttribute("This is a sample method", 2)]
+    public void SampleMethod()
+    {
+        // Method implementation
+    }
+}
+3. Access Custom Attributes Using Reflection
+Use reflection to inspect the custom attributes and their properties at runtime.
+
+using System;
+using System.Reflection;
+
+public class Program
+{
+    public static void Main()
+    {
+        // Get the type of the SampleClass
+        Type type = typeof(SampleClass);
+
+        // Retrieve custom attributes from the class
+        var classAttribute = (MyCustomAttribute)Attribute.GetCustomAttribute(type, typeof(MyCustomAttribute));
+        if (classAttribute != null)
+        {
+            Console.WriteLine($"Class Attribute - Description: {classAttribute.Description}, Version: {classAttribute.Version}");
+        }
+
+        // Retrieve custom attributes from the method
+        MethodInfo methodInfo = type.GetMethod("SampleMethod");
+        var methodAttribute = (MyCustomAttribute)Attribute.GetCustomAttribute(methodInfo, typeof(MyCustomAttribute));
+        if (methodAttribute != null)
+        {
+            Console.WriteLine($"Method Attribute - Description: {methodAttribute.Description}, Version: {methodAttribute.Version}");
+        }
+    }
+}
+
+In C#, custom attributes are a way to add metadata to your code that can be queried at runtime using reflection. This can be useful for scenarios like configuration, documentation, or applying certain behaviors dynamically based on metadata.
+
+Here’s a step-by-step guide on how to define and use custom attributes with reflection:
+
+1. Define a Custom Attribute
+You create a custom attribute by defining a class that inherits from System.Attribute. You can also define any properties or fields you want to include in the attribute.
+
+csharp
+Copy code
+using System;
+
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false)]
+public class MyCustomAttribute : Attribute
+{
+    public string Description { get; }
+    public int Version { get; }
+
+    public MyCustomAttribute(string description, int version)
+    {
+        Description = description;
+        Version = version;
+    }
+}
+2. Apply the Custom Attribute
+Apply the custom attribute to a class or method (or other valid targets) by placing it above the definition with square brackets.
+
+csharp
+Copy code
+[MyCustomAttribute("This is a sample class", 1)]
+public class SampleClass
+{
+    [MyCustomAttribute("This is a sample method", 2)]
+    public void SampleMethod()
+    {
+        // Method implementation
+    }
+}
+3. Access Custom Attributes Using Reflection
+Use reflection to inspect the custom attributes and their properties at runtime.
+
+csharp
+Copy code
+using System;
+using System.Reflection;
+
+public class Program
+{
+    public static void Main()
+    {
+        // Get the type of the SampleClass
+        Type type = typeof(SampleClass);
+
+        // Retrieve custom attributes from the class
+        var classAttribute = (MyCustomAttribute)Attribute.GetCustomAttribute(type, typeof(MyCustomAttribute));
+        if (classAttribute != null)
+        {
+            Console.WriteLine($"Class Attribute - Description: {classAttribute.Description}, Version: {classAttribute.Version}");
+        }
+
+        // Retrieve custom attributes from the method
+        MethodInfo methodInfo = type.GetMethod("SampleMethod");
+        var methodAttribute = (MyCustomAttribute)Attribute.GetCustomAttribute(methodInfo, typeof(MyCustomAttribute));
+        if (methodAttribute != null)
+        {
+            Console.WriteLine($"Method Attribute - Description: {methodAttribute.Description}, Version: {methodAttribute.Version}");
+        }
+    }
+}
+Explanation:
+Define a Custom Attribute: The [AttributeUsage] attribute specifies where your custom attribute can be applied (e.g., to classes, methods). In this case, AttributeTargets.Class | AttributeTargets.Method means it can be applied to both classes and methods.
+
+Apply the Attribute: The MyCustomAttribute is applied to both the SampleClass and the SampleMethod.
+
+Inspect the Attribute: Using reflection, you get the type and method info and retrieve the custom attributes applied to them.
+
+Key Points:
+AttributeUsage: Controls where your custom attribute can be applied.
+Attribute.GetCustomAttribute: Retrieves the custom attribute applied to a target (e.g., type or method).
+Reflection: Allows you to inspect and work with attributes at runtime, enabling dynamic behavior based on metadata.
+Custom attributes and reflection provide a powerful way to add and access metadata in your applications, enabling dynamic and flexible code execution.
+
+
+
+

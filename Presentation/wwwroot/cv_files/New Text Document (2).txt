@@ -1,0 +1,91 @@
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ProfileService } from '../../services/profile.service';
+
+@Component({
+  selector: 'app-update_profile',
+  templateUrl: './update_profile.component.html',
+  styleUrls: ['./update_profile.component.css'],
+})
+export class Update_profileComponent implements OnInit {
+  profileform: FormGroup;
+
+  constructor(private profile3: ProfileService, private fb: FormBuilder) {
+    this.profileform = this.fb.group({
+      image_person,
+      UserName: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+          Validators.maxLength(20),
+        ],
+      ],
+      Email: ['', [Validators.required, Validators.email]],
+      Password: ['', [Validators.required, Validators.minLength(6)]],
+      PHoneNumber: ['', Validators.required],
+      PersonalDetails: ['', Validators.required],
+      Skills: ['', Validators.required],
+      Experience: ['', Validators.required],
+      Portfolio: [''],
+      AssignedTasks: [''],
+      Rating: [''],
+    });
+  }
+
+  ngOnInit() {}
+  onsubmit(): void {
+    if (this.profileform.valid) {
+      this.profile3.updateProfile(this.profileform.value).subscribe({
+        next: (update1: any) => {
+          console.log('Profile updated successfully', update1);
+        },
+      });
+    }
+  }
+}
+<form class="" [formGroup]="profileform" (ngSubmit)="onsubmit()">
+  <div>
+    <label for="UserName" class="text-capitalize">UserName:</label>
+    <input type="text" id="UserName" formControlName="UserName" class="form-control" />
+  </div>
+  <div>
+    <label for="Email" class="text-capitalize">Email:</label>
+    <input type="email" id="Email" formControlName="Email" class="form-control" />
+  </div>
+  <div>
+    <label for="Password" class="text-capitalize">Password</label>
+    <input type="password" id="Password" formControlName="Password" class="form-control" />
+  </div>
+  <div>
+    <label for="PhoneNumber" class="text-capitalize">PhoneNumber:</label>
+    <input type="text" id="PhoneNumber" formControlName="PhoneNumber" class="form-control" />
+  </div>
+
+  <div>
+    <label for="PersonalDetails" class="text-capitalize">PersonalDetails:</label>
+    <textarea class="form-control" id="PersonalDetails" formControlName="PersonalDetails"></textarea>
+  </div>
+  <div>
+    <label for="Skills" class="text-capitalize">Skills:</label>
+    <textarea class="form-control" id="Skills" formControlName="Skills"></textarea>
+  </div>
+  <div>
+    <label for="Experience" class="text-capitalize">Experience:</label>
+    <textarea class="form-control" id="Experience" formControlName="Experience"></textarea>
+  </div>
+  <div>
+    <label for="Portfolio" class="text-capitalize">Portfolio:</label>
+    <textarea class="form-control" id="Portfolio" formControlName="Portfolio"></textarea>
+  </div>
+  <div>
+    <label for="AssignedTasks" class="text-capitalize">AssignedTasks:</label>
+    <textarea class="form-control" id="AssignedTasks" formControlName="AssignedTasks"></textarea>
+  </div>
+  <div>
+    <label for="Rating" class="text-capitalize">Rating:</label>
+    <textarea class="form-control" id="Rating" formControlName="Rating"></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-primary mt-3">Submit</button>
+</form>
